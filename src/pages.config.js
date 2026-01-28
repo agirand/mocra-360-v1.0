@@ -52,6 +52,10 @@ import CreateWorkspace from './pages/CreateWorkspace';
 import Dashboard from './pages/Dashboard';
 import Accounts from './pages/Accounts';
 import AccountDetail from './pages/AccountDetail';
+import Contacts from './pages/Contacts';
+import Facilities from './pages/Facilities';
+import Brands from './pages/Brands';
+import Projects from './pages/Projects';
 import __Layout from './Layout.jsx';
 
 
@@ -61,6 +65,10 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "Accounts": Accounts,
     "AccountDetail": AccountDetail,
+    "Contacts": Contacts,
+    "Facilities": Facilities,
+    "Brands": Brands,
+    "Projects": Projects,
 }
 
 export const pagesConfig = {
