@@ -50,6 +50,8 @@
 import Onboarding from './pages/Onboarding';
 import CreateWorkspace from './pages/CreateWorkspace';
 import Dashboard from './pages/Dashboard';
+import Accounts from './pages/Accounts';
+import AccountDetail from './pages/AccountDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -57,6 +59,8 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "CreateWorkspace": CreateWorkspace,
     "Dashboard": Dashboard,
+    "Accounts": Accounts,
+    "AccountDetail": AccountDetail,
 }
 
 export const pagesConfig = {
