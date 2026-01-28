@@ -93,17 +93,17 @@ function LayoutContent({ children, currentPageName }) {
               </div>
               <span className="font-semibold text-slate-900 hidden sm:block">MOCRA 360</span>
             </Link>
-            <div className="hidden md:block">
+            <div className="hidden md:block ml-2">
               <WorkspaceSwitcher />
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {isPlatformAdmin && (
-              <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-medium hidden sm:block">
+              <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-medium hidden lg:block whitespace-nowrap">
                 Platform Admin
               </span>
             )}
-            <span className="text-sm text-slate-600 hidden sm:block">{user?.email}</span>
+            <span className="text-sm text-slate-600 hidden lg:block">{user?.email}</span>
             <Button variant="ghost" size="icon" onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
             </Button>
