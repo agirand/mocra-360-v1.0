@@ -97,6 +97,16 @@ export default function ControlCenter() {
         role: memberForm.role,
         status: 'invited'
       });
+      
+      // Send invitation email
+      const user = await base44.auth.me();
+      await base44.functions.invoke('sendInviteEmail', {
+        recipientEmail: memberForm.userEmail,
+        workspaceName: selectedWorkspaceForMember.name,
+        role: memberForm.role,
+        inviterName: user.full_name || user.email
+      });
+      
       setShowMemberDialog(false);
       setSelectedWorkspaceForMember(null);
       setMemberForm({ userEmail: '', role: 'workspace_user' });

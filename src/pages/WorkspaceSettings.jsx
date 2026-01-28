@@ -91,6 +91,15 @@ export default function WorkspaceSettings() {
         role: inviteForm.role,
         status: 'invited'
       });
+      
+      // Send invitation email
+      await base44.functions.invoke('sendInviteEmail', {
+        recipientEmail: inviteForm.email,
+        workspaceName: workspace.name,
+        role: inviteForm.role,
+        inviterName: user.full_name || user.email
+      });
+      
       setShowInviteDialog(false);
       setInviteForm({ email: '', role: 'workspace_user' });
       loadWorkspaceData();

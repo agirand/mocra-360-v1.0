@@ -79,6 +79,14 @@ export default function CreateWorkspace() {
           role: invite.role,
           status: 'invited'
         });
+        
+        // Send invitation email
+        await base44.functions.invoke('sendInviteEmail', {
+          recipientEmail: invite.email,
+          workspaceName: formData.name,
+          role: invite.role,
+          inviterName: user.full_name || user.email
+        });
       }
 
       // Set as active workspace and redirect
