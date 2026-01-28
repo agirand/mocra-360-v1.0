@@ -70,6 +70,16 @@ export default function CreateWorkspace() {
         status: 'active'
       });
 
+      // If company workspace, create default Account for immediate CRM use
+      if (formData.type === 'client') {
+        await base44.entities.Account.create({
+          workspaceId: workspace.id,
+          name: formData.name,
+          accountType: 'other',
+          complianceStatus: 'unknown'
+        });
+      }
+
       // Create invited memberships
       for (const invite of invites) {
         await base44.entities.WorkspaceMembership.create({
@@ -124,7 +134,7 @@ export default function CreateWorkspace() {
               <div>
                 <CardTitle>Create Workspace</CardTitle>
                 <CardDescription>
-                  Set up your {formData.type === 'consultant' ? 'consulting' : 'client'} workspace
+                  Set up your {formData.type === 'consultant' ? 'consulting' : 'company'} workspace
                 </CardDescription>
               </div>
             </div>
@@ -161,7 +171,7 @@ export default function CreateWorkspace() {
                     <SelectItem value="client">
                       <div className="flex items-center gap-2">
                         <Building2 className="h-4 w-4 text-emerald-600" />
-                        Client
+                        Company
                       </div>
                     </SelectItem>
                   </SelectContent>
