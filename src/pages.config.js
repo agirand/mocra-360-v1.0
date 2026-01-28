@@ -56,6 +56,10 @@ import Contacts from './pages/Contacts';
 import Facilities from './pages/Facilities';
 import Brands from './pages/Brands';
 import Projects from './pages/Projects';
+import SaaSDashboard from './pages/SaaSDashboard';
+import ControlCenter from './pages/ControlCenter';
+import Opportunities from './pages/Opportunities';
+import WorkspaceSettings from './pages/WorkspaceSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +73,10 @@ export const PAGES = {
     "Facilities": Facilities,
     "Brands": Brands,
     "Projects": Projects,
+    "SaaSDashboard": SaaSDashboard,
+    "ControlCenter": ControlCenter,
+    "Opportunities": Opportunities,
+    "WorkspaceSettings": WorkspaceSettings,
 }
 
 export const pagesConfig = {
