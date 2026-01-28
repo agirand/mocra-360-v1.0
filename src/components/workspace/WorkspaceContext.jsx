@@ -22,10 +22,9 @@ export function WorkspaceProvider({ children }) {
       const isAdmin = currentUser?.role === 'admin';
       setIsPlatformAdmin(isAdmin);
 
-      // Load memberships
+      // Load memberships (all statuses to include invited)
       const userMemberships = await base44.entities.WorkspaceMembership.filter({
-        userEmail: currentUser.email,
-        status: 'active'
+        userEmail: currentUser.email
       });
       setMemberships(userMemberships);
 
@@ -35,10 +34,10 @@ export function WorkspaceProvider({ children }) {
         setIsPlatformAdmin(true);
       }
 
-      // Load workspaces for memberships
+      // Load workspaces for memberships (all statuses)
       if (userMemberships.length > 0) {
         const workspaceIds = [...new Set(userMemberships.map(m => m.workspaceId))];
-        const allWorkspaces = await base44.entities.Workspace.filter({ status: 'active' });
+        const allWorkspaces = await base44.entities.Workspace.filter({});
         const userWorkspaces = allWorkspaces.filter(w => workspaceIds.includes(w.id));
         setWorkspaces(userWorkspaces);
 
@@ -74,13 +73,12 @@ export function WorkspaceProvider({ children }) {
   const refreshMemberships = useCallback(async () => {
     if (!user) return;
     const userMemberships = await base44.entities.WorkspaceMembership.filter({
-      userEmail: user.email,
-      status: 'active'
+      userEmail: user.email
     });
     setMemberships(userMemberships);
     
     const workspaceIds = [...new Set(userMemberships.map(m => m.workspaceId))];
-    const allWorkspaces = await base44.entities.Workspace.filter({ status: 'active' });
+    const allWorkspaces = await base44.entities.Workspace.filter({});
     const userWorkspaces = allWorkspaces.filter(w => workspaceIds.includes(w.id));
     setWorkspaces(userWorkspaces);
   }, [user]);
