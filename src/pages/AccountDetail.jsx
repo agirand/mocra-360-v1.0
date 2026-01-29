@@ -376,14 +376,53 @@ function ContactsTab({ contacts, accountId, workspaceId, canEdit, onRefresh }) {
 
   if (contacts.length === 0) {
     return (
-      <EmptyState
-        icon={Users}
-        title="No contacts yet"
-        description="Add contacts associated with this account"
-        actionLabel="Add Contact"
-        onAction={() => setShowDialog(true)}
-        showAction={canEdit}
-      />
+      <>
+        <EmptyState
+          icon={Users}
+          title="No contacts yet"
+          description="Add contacts associated with this account"
+          actionLabel="Add Contact"
+          onAction={() => setShowDialog(true)}
+          showAction={canEdit}
+        />
+        <Dialog open={showDialog} onOpenChange={setShowDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Contact</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Name *</Label>
+                <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label>Email *</Label>
+                <Input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Phone</Label>
+                  <Input value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Title</Label>
+                  <Input value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Department</Label>
+                <Input value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
+              <Button onClick={handleCreate} disabled={saving || !formData.name || !formData.email}>
+                {saving ? 'Adding...' : 'Add Contact'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }
 
@@ -487,14 +526,73 @@ function FacilitiesTab({ facilities, accountId, workspaceId, canEdit, onRefresh 
 
   if (facilities.length === 0) {
     return (
-      <EmptyState
-        icon={Factory}
-        title="No facilities yet"
-        description="Add facilities for this account"
-        actionLabel="Add Facility"
-        onAction={() => setShowDialog(true)}
-        showAction={canEdit}
-      />
+      <>
+        <EmptyState
+          icon={Factory}
+          title="No facilities yet"
+          description="Add facilities for this account"
+          actionLabel="Add Facility"
+          onAction={() => setShowDialog(true)}
+          showAction={canEdit}
+        />
+        <Dialog open={showDialog} onOpenChange={setShowDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Facility</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Facility Name *</Label>
+                <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label>Facility Type</Label>
+                <Select value={formData.facilityType} onValueChange={(value) => setFormData({ ...formData, facilityType: value })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                    <SelectItem value="packaging">Packaging</SelectItem>
+                    <SelectItem value="warehouse">Warehouse</SelectItem>
+                    <SelectItem value="lab">Lab</SelectItem>
+                    <SelectItem value="office">Office</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Address</Label>
+                <Input placeholder="Street address" value={formData.address1} onChange={(e) => setFormData({ ...formData, address1: e.target.value })} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>City</Label>
+                  <Input value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>State/Province</Label>
+                  <Input value={formData.state} onChange={(e) => setFormData({ ...formData, state: e.target.value })} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Postal Code</Label>
+                  <Input value={formData.postalCode} onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Country</Label>
+                  <Input value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })} />
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
+              <Button onClick={handleCreate} disabled={saving || !formData.name}>
+                {saving ? 'Adding...' : 'Add Facility'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }
 
@@ -614,14 +712,49 @@ function BrandsTab({ brands, accountId, workspaceId, canEdit, onRefresh }) {
 
   if (brands.length === 0) {
     return (
-      <EmptyState
-        icon={Tag}
-        title="No brands yet"
-        description="Add brands for this account"
-        actionLabel="Add Brand"
-        onAction={() => setShowDialog(true)}
-        showAction={canEdit}
-      />
+      <>
+        <EmptyState
+          icon={Tag}
+          title="No brands yet"
+          description="Add brands for this account"
+          actionLabel="Add Brand"
+          onAction={() => setShowDialog(true)}
+          showAction={canEdit}
+        />
+        <Dialog open={showDialog} onOpenChange={setShowDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Brand</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Brand Name *</Label>
+                <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
+              <Button onClick={handleCreate} disabled={saving || !formData.name}>
+                {saving ? 'Adding...' : 'Add Brand'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }
 
@@ -717,14 +850,69 @@ function ProjectsTab({ projects, accountId, workspaceId, canEdit, onRefresh }) {
 
   if (projects.length === 0) {
     return (
-      <EmptyState
-        icon={FolderKanban}
-        title="No projects yet"
-        description="Create compliance projects for this account"
-        actionLabel="Create Project"
-        onAction={() => setShowDialog(true)}
-        showAction={canEdit}
-      />
+      <>
+        <EmptyState
+          icon={FolderKanban}
+          title="No projects yet"
+          description="Create compliance projects for this account"
+          actionLabel="Create Project"
+          onAction={() => setShowDialog(true)}
+          showAction={canEdit}
+        />
+        <Dialog open={showDialog} onOpenChange={setShowDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create Project</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Project Title *</Label>
+                <Input value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Project Type</Label>
+                  <Select value={formData.projectType} onValueChange={(value) => setFormData({ ...formData, projectType: value })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="health_check_remediation">Health Check Remediation</SelectItem>
+                      <SelectItem value="sop_rollout">SOP Rollout</SelectItem>
+                      <SelectItem value="training_rollout">Training Rollout</SelectItem>
+                      <SelectItem value="adverse_event_investigation">Adverse Event Investigation</SelectItem>
+                      <SelectItem value="equipment_program">Equipment Program</SelectItem>
+                      <SelectItem value="audit_prep">Audit Prep</SelectItem>
+                      <SelectItem value="supplier_qualification">Supplier Qualification</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Priority</Label>
+                  <Select value={formData.priority} onValueChange={(value) => setFormData({ ...formData, priority: value })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="critical">Critical</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
+              <Button onClick={handleCreate} disabled={saving || !formData.title}>
+                {saving ? 'Creating...' : 'Create Project'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }
 
