@@ -89,7 +89,7 @@ export default function Projects() {
   };
 
   const handleCreate = async () => {
-    if (!formData.title.trim()) return;
+    if (!formData.title.trim() || !canEdit) return;
     setSaving(true);
     try {
       await base44.entities.Project.create({
@@ -113,6 +113,7 @@ export default function Projects() {
       loadData();
     } catch (error) {
       console.error('Error creating project:', error);
+      alert('Failed to create project. You may not have permission.');
     } finally {
       setSaving(false);
     }

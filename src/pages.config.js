@@ -47,35 +47,35 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Onboarding from './pages/Onboarding';
+import AccountDetail from './pages/AccountDetail';
+import Accounts from './pages/Accounts';
+import Brands from './pages/Brands';
+import Contacts from './pages/Contacts';
+import ControlCenter from './pages/ControlCenter';
 import CreateWorkspace from './pages/CreateWorkspace';
 import Dashboard from './pages/Dashboard';
-import Accounts from './pages/Accounts';
-import AccountDetail from './pages/AccountDetail';
-import Contacts from './pages/Contacts';
 import Facilities from './pages/Facilities';
-import Brands from './pages/Brands';
+import Onboarding from './pages/Onboarding';
+import Opportunities from './pages/Opportunities';
 import Projects from './pages/Projects';
 import SaaSDashboard from './pages/SaaSDashboard';
-import ControlCenter from './pages/ControlCenter';
-import Opportunities from './pages/Opportunities';
 import WorkspaceSettings from './pages/WorkspaceSettings';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Onboarding": Onboarding,
+    "AccountDetail": AccountDetail,
+    "Accounts": Accounts,
+    "Brands": Brands,
+    "Contacts": Contacts,
+    "ControlCenter": ControlCenter,
     "CreateWorkspace": CreateWorkspace,
     "Dashboard": Dashboard,
-    "Accounts": Accounts,
-    "AccountDetail": AccountDetail,
-    "Contacts": Contacts,
     "Facilities": Facilities,
-    "Brands": Brands,
+    "Onboarding": Onboarding,
+    "Opportunities": Opportunities,
     "Projects": Projects,
     "SaaSDashboard": SaaSDashboard,
-    "ControlCenter": ControlCenter,
-    "Opportunities": Opportunities,
     "WorkspaceSettings": WorkspaceSettings,
 }
 

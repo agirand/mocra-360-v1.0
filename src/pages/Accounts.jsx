@@ -71,7 +71,7 @@ export default function Accounts() {
   };
 
   const handleCreate = async () => {
-    if (!formData.name.trim()) return;
+    if (!formData.name.trim() || !canEdit) return;
     setSaving(true);
     try {
       await base44.entities.Account.create({
@@ -92,6 +92,7 @@ export default function Accounts() {
       loadAccounts();
     } catch (error) {
       console.error('Error creating account:', error);
+      alert('Failed to create account. You may not have permission.');
     } finally {
       setSaving(false);
     }

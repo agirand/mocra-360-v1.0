@@ -26,17 +26,39 @@ export function WorkspaceProvider({ children }) {
       const userMemberships = await base44.entities.WorkspaceMembership.filter({
         userEmail: currentUser.email
       });
-      setMemberships(userMemberships);
+
+      // Auto-activate invited memberships when user logs in
+      const invitedMemberships = userMemberships.filter(m => m.status === 'invited');
+      if (invitedMemberships.length > 0) {
+        await Promise.all(
+          invitedMemberships.map(m => 
+            base44.entities.WorkspaceMembership.update(m.id, { status: 'active' })
+          )
+        );
+        // Reload memberships after activation
+        const updatedMemberships = await base44.entities.WorkspaceMembership.filter({
+          userEmail: currentUser.email
+        });
+        setMemberships(updatedMemberships);
+      } else {
+        setMemberships(userMemberships);
+      }
+
+      // Use updated memberships
+      const currentMemberships = invitedMemberships.length > 0 
+        ? await base44.entities.WorkspaceMembership.filter({ userEmail: currentUser.email })
+        : userMemberships;
 
       // Check for platform_admin role in any membership
-      const hasPlatformAdminMembership = userMemberships.some(m => m.role === 'platform_admin');
+      const hasPlatformAdminMembership = currentMemberships.some(m => m.role === 'platform_admin');
       if (hasPlatformAdminMembership) {
         setIsPlatformAdmin(true);
       }
 
-      // Load workspaces for memberships (all statuses)
-      if (userMemberships.length > 0) {
-        const workspaceIds = [...new Set(userMemberships.map(m => m.workspaceId))];
+      // Load only active workspaces
+      const activeMemberships = currentMemberships.filter(m => m.status === 'active');
+      if (activeMemberships.length > 0) {
+        const workspaceIds = [...new Set(activeMemberships.map(m => m.workspaceId))];
         const allWorkspaces = await base44.entities.Workspace.filter({});
         const userWorkspaces = allWorkspaces.filter(w => workspaceIds.includes(w.id));
         setWorkspaces(userWorkspaces);
@@ -48,7 +70,7 @@ export function WorkspaceProvider({ children }) {
         
         if (defaultWorkspace) {
           setActiveWorkspace(defaultWorkspace);
-          const membership = userMemberships.find(m => m.workspaceId === defaultWorkspace.id);
+          const membership = activeMemberships.find(m => m.workspaceId === defaultWorkspace.id);
           setUserRole(membership?.role || null);
         }
       }

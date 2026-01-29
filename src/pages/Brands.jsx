@@ -56,7 +56,7 @@ export default function Brands() {
   };
 
   const handleCreate = async () => {
-    if (!formData.name.trim() || !formData.accountId) return;
+    if (!formData.name.trim() || !formData.accountId || !canEdit) return;
     setSaving(true);
     try {
       await base44.entities.Brand.create({
@@ -68,6 +68,7 @@ export default function Brands() {
       loadData();
     } catch (error) {
       console.error('Error creating brand:', error);
+      alert('Failed to create brand. You may not have permission.');
     } finally {
       setSaving(false);
     }
