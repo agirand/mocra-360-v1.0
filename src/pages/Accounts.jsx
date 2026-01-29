@@ -71,7 +71,7 @@ export default function Accounts() {
   };
 
   const handleCreate = async () => {
-    if (!formData.name.trim() || !canEdit) return;
+    if (!formData.name.trim()) return;
     setSaving(true);
     try {
       await base44.entities.Account.create({

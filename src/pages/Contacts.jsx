@@ -56,7 +56,7 @@ export default function Contacts() {
   };
 
   const handleCreate = async () => {
-    if (!formData.name.trim() || !formData.email.trim() || !formData.accountId || !canEdit) return;
+    if (!formData.name.trim() || !formData.email.trim() || !formData.accountId) return;
     setSaving(true);
     try {
       await base44.entities.Contact.create({

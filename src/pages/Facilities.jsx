@@ -69,7 +69,7 @@ export default function Facilities() {
   };
 
   const handleCreate = async () => {
-    if (!formData.name.trim() || !formData.accountId || !canEdit) return;
+    if (!formData.name.trim() || !formData.accountId) return;
     setSaving(true);
     try {
       await base44.entities.Facility.create({

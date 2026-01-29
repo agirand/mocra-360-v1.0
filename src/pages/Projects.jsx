@@ -89,7 +89,7 @@ export default function Projects() {
   };
 
   const handleCreate = async () => {
-    if (!formData.title.trim() || !canEdit) return;
+    if (!formData.title.trim()) return;
     setSaving(true);
     try {
       await base44.entities.Project.create({

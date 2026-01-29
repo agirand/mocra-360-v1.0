@@ -56,7 +56,7 @@ export default function Brands() {
   };
 
   const handleCreate = async () => {
-    if (!formData.name.trim() || !formData.accountId || !canEdit) return;
+    if (!formData.name.trim() || !formData.accountId) return;
     setSaving(true);
     try {
       await base44.entities.Brand.create({
