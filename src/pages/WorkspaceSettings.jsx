@@ -14,7 +14,7 @@ import StatusBadge from '@/components/ui/StatusBadge';
 import { Settings, Users, Building2, UserPlus, Trash2, Shield, Save } from 'lucide-react';
 
 export default function WorkspaceSettings() {
-  const { activeWorkspace, canAdmin, userRole, loadUserContext, refreshMemberships } = useWorkspace();
+  const { activeWorkspace, canAdmin, userRole, loading: workspaceLoading, loadUserContext, refreshMemberships } = useWorkspace();
   const [workspace, setWorkspace] = useState(null);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -131,7 +131,7 @@ export default function WorkspaceSettings() {
     }
   };
 
-  if (loading) {
+  if (workspaceLoading || loading) {
     return (
       <div className="animate-pulse space-y-6">
         <div className="h-8 w-48 bg-slate-200 rounded" />
@@ -145,6 +145,20 @@ export default function WorkspaceSettings() {
       <div className="text-center py-16">
         <p className="text-slate-500">Workspace not found</p>
       </div>
+    );
+  }
+
+  // Restrict access to admins only
+  if (!canAdmin) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center py-8">
+            <p className="text-slate-600 font-medium mb-2">Access Restricted</p>
+            <p className="text-sm text-slate-500">Only workspace administrators can access settings</p>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
