@@ -15,7 +15,10 @@ import EmptyState from '@/components/ui/EmptyState';
 import StatusBadge from '@/components/ui/StatusBadge';
 import { Tag, Search, Building2, Filter } from 'lucide-react';
 
+import { useRouteGuard } from '@/components/workspace/RouteGuard';
+
 export default function Brands() {
+  useRouteGuard([]); // Block client users
   const { activeWorkspace, canEdit, loading: workspaceLoading } = useWorkspace();
   const [brands, setBrands] = useState([]);
   const [accounts, setAccounts] = useState([]);

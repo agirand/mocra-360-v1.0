@@ -15,7 +15,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import { Users, Search, Mail, Phone, Building2, Filter } from 'lucide-react';
 
 export default function Contacts() {
-  const { activeWorkspace, canEdit, loading: workspaceLoading } = useWorkspace();
+  const { activeWorkspace, canEdit, loading: workspaceLoading, isClientUser, activeAccountId } = useWorkspace();
   const [contacts, setContacts] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);

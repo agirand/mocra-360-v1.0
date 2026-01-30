@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 
 function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
-  const { user, isPlatformAdmin, activeWorkspace, loading, workspaces, isClientUser } = useWorkspace();
+  const { user, isPlatformAdmin, activeWorkspace, loading, workspaces, isClientUser, activeAccountId, accountAssignments } = useWorkspace();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Scroll to top on route change
@@ -78,6 +78,17 @@ function LayoutContent({ children, currentPageName }) {
   if (!loading && workspaces.length === 0 && currentPageName !== 'Onboarding' && currentPageName !== 'CreateWorkspace') {
     window.location.href = createPageUrl('Onboarding');
     return null;
+  }
+
+  // Client users with multiple accounts and no active account - show picker
+  const clientPages = ['ClientDashboard', 'ClientAccountView', 'ClientProjects'];
+  if (!loading && isClientUser && accountAssignments.length > 1 && !activeAccountId && clientPages.includes(currentPageName)) {
+    return <AccountPicker />;
+  }
+
+  // Client users with no account assignments - show error
+  if (!loading && isClientUser && accountAssignments.length === 0 && clientPages.includes(currentPageName)) {
+    return <AccountPicker />;
   }
 
   return (

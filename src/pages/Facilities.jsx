@@ -23,7 +23,10 @@ const FACILITY_TYPES = [
   { value: 'other', label: 'Other' },
 ];
 
+import { useRouteGuard } from '@/components/workspace/RouteGuard';
+
 export default function Facilities() {
+  useRouteGuard([]); // Block client users
   const { activeWorkspace, canEdit, loading: workspaceLoading } = useWorkspace();
   const [facilities, setFacilities] = useState([]);
   const [accounts, setAccounts] = useState([]);

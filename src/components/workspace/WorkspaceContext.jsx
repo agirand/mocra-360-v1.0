@@ -84,11 +84,24 @@ export function WorkspaceProvider({ children }) {
             });
             setAccountAssignments(assignments);
 
-            // Set active account from localStorage or first assignment
-            const savedAccountId = localStorage.getItem(`activeAccountId_${defaultWorkspace.id}`);
-            const savedAssignment = assignments.find(a => a.accountId === savedAccountId);
-            const defaultAccountId = savedAssignment?.accountId || assignments[0]?.accountId;
-            setActiveAccountId(defaultAccountId);
+            if (assignments.length === 0) {
+              // No assignments - will show error page
+              setActiveAccountId(null);
+            } else if (assignments.length === 1) {
+              // Single assignment - auto-select
+              setActiveAccountId(assignments[0].accountId);
+              localStorage.setItem(`activeAccountId_${defaultWorkspace.id}`, assignments[0].accountId);
+            } else {
+              // Multiple assignments - restore or require selection
+              const savedAccountId = localStorage.getItem(`activeAccountId_${defaultWorkspace.id}`);
+              const savedAssignment = assignments.find(a => a.accountId === savedAccountId);
+              if (savedAssignment) {
+                setActiveAccountId(savedAccountId);
+              } else {
+                // Will show account picker
+                setActiveAccountId(null);
+              }
+            }
           }
         }
       }

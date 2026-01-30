@@ -40,7 +40,10 @@ const PRIORITIES = [
   { value: 'critical', label: 'Critical' },
 ];
 
+import { useRouteGuard } from '@/components/workspace/RouteGuard';
+
 export default function Projects() {
+  useRouteGuard([]); // Block client users
   const { activeWorkspace, canEdit, loading: workspaceLoading } = useWorkspace();
   const [projects, setProjects] = useState([]);
   const [accounts, setAccounts] = useState([]);

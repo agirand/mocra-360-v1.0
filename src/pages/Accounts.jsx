@@ -32,7 +32,10 @@ const COMPLIANCE_STATUSES = [
   { value: 'non_compliant', label: 'Non-Compliant' },
 ];
 
+import { useRouteGuard } from '@/components/workspace/RouteGuard';
+
 export default function Accounts() {
+  useRouteGuard([]); // Block client users
   const { activeWorkspace, canEdit, loading: workspaceLoading } = useWorkspace();
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
