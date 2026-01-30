@@ -60,6 +60,9 @@ import Opportunities from './pages/Opportunities';
 import Projects from './pages/Projects';
 import SaaSDashboard from './pages/SaaSDashboard';
 import WorkspaceSettings from './pages/WorkspaceSettings';
+import ClientDashboard from './pages/ClientDashboard';
+import ClientAccountView from './pages/ClientAccountView';
+import ClientProjects from './pages/ClientProjects';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +80,9 @@ export const PAGES = {
     "Projects": Projects,
     "SaaSDashboard": SaaSDashboard,
     "WorkspaceSettings": WorkspaceSettings,
+    "ClientDashboard": ClientDashboard,
+    "ClientAccountView": ClientAccountView,
+    "ClientProjects": ClientProjects,
 }
 
 export const pagesConfig = {

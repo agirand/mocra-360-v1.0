@@ -32,9 +32,11 @@ export default function WorkspaceSettings() {
   const [showInviteDialog, setShowInviteDialog] = useState(false);
   const [inviteForm, setInviteForm] = useState({
     email: '',
-    role: 'workspace_user'
+    role: 'workspace_user',
+    accountId: ''
   });
   const [inviting, setInviting] = useState(false);
+  const [accounts, setAccounts] = useState([]);
 
   useEffect(() => {
     if (activeWorkspace) {
@@ -45,9 +47,10 @@ export default function WorkspaceSettings() {
   const loadWorkspaceData = async () => {
     setLoading(true);
     try {
-      const [workspaces, memberships] = await Promise.all([
+      const [workspaces, memberships, accountsList] = await Promise.all([
         base44.entities.Workspace.filter({ id: activeWorkspace.id }),
-        base44.entities.WorkspaceMembership.filter({ workspaceId: activeWorkspace.id })
+        base44.entities.WorkspaceMembership.filter({ workspaceId: activeWorkspace.id }),
+        base44.entities.Account.filter({ workspaceId: activeWorkspace.id })
       ]);
       
       if (workspaces.length > 0) {
@@ -59,6 +62,7 @@ export default function WorkspaceSettings() {
         });
       }
       setMembers(memberships);
+      setAccounts(accountsList);
     } catch (error) {
       console.error('Error loading workspace data:', error);
     } finally {
@@ -81,6 +85,12 @@ export default function WorkspaceSettings() {
 
   const handleInvite = async () => {
     if (!inviteForm.email.trim()) return;
+    const isClientRole = inviteForm.role === 'client_admin' || inviteForm.role === 'client_user';
+    if (isClientRole && !inviteForm.accountId) {
+      alert('Please select an account for client users');
+      return;
+    }
+
     setInviting(true);
     try {
       const user = await base44.auth.me();
@@ -91,6 +101,18 @@ export default function WorkspaceSettings() {
         role: inviteForm.role,
         status: 'invited'
       });
+
+      // Create account assignment for client users
+      if (isClientRole) {
+        await base44.entities.AccountUserAssignment.create({
+          workspaceId: activeWorkspace.id,
+          accountId: inviteForm.accountId,
+          userId: '',
+          userEmail: inviteForm.email,
+          role: inviteForm.role,
+          status: 'active'
+        });
+      }
       
       // Send invitation email
       await base44.functions.invoke('sendInviteEmail', {
@@ -101,7 +123,7 @@ export default function WorkspaceSettings() {
       });
       
       setShowInviteDialog(false);
-      setInviteForm({ email: '', role: 'workspace_user' });
+      setInviteForm({ email: '', role: 'workspace_user', accountId: '' });
       loadWorkspaceData();
       refreshMemberships();
     } catch (error) {
@@ -319,6 +341,8 @@ export default function WorkspaceSettings() {
                             <SelectItem value="workspace_admin">Admin</SelectItem>
                             <SelectItem value="workspace_user">User</SelectItem>
                             <SelectItem value="limited_user">Limited</SelectItem>
+                            <SelectItem value="client_admin">Client Admin</SelectItem>
+                            <SelectItem value="client_user">Client User</SelectItem>
                           </SelectContent>
                         </Select>
                       ) : (
@@ -392,9 +416,42 @@ export default function WorkspaceSettings() {
                       <p className="text-xs text-slate-500">View-only access with limited actions</p>
                     </div>
                   </SelectItem>
+                  <SelectItem value="client_admin">
+                    <div>
+                      <p className="font-medium">Client Admin</p>
+                      <p className="text-xs text-slate-500">Manage users for assigned account</p>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="client_user">
+                    <div>
+                      <p className="font-medium">Client User</p>
+                      <p className="text-xs text-slate-500">View-only access to assigned account</p>
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
+            {(inviteForm.role === 'client_admin' || inviteForm.role === 'client_user') && (
+              <div className="space-y-2">
+                <Label>Assign to Account *</Label>
+                <Select
+                  value={inviteForm.accountId}
+                  onValueChange={(value) => setInviteForm({ ...inviteForm, accountId: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select account..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {accounts.map(account => (
+                      <SelectItem key={account.id} value={account.id}>
+                        {account.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-slate-500">Client users will only see data for this account</p>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowInviteDialog(false)}>Cancel</Button>
