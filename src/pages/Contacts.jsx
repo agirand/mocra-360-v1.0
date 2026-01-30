@@ -37,14 +37,31 @@ export default function Contacts() {
     if (activeWorkspace) {
       loadData();
     }
-  }, [activeWorkspace]);
+  }, [activeWorkspace, activeAccountId]);
 
   const loadData = async () => {
+    if (!activeWorkspace) return;
+    
+    // Client users must have an active account
+    if (isClientUser && !activeAccountId) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
+      // Client users can only see their account's data
+      const contactFilter = isClientUser 
+        ? { workspaceId: activeWorkspace.id, accountId: activeAccountId }
+        : { workspaceId: activeWorkspace.id };
+      
+      const accountFilter = isClientUser
+        ? { workspaceId: activeWorkspace.id, id: activeAccountId }
+        : { workspaceId: activeWorkspace.id };
+
       const [contactsData, accountsData] = await Promise.all([
-        base44.entities.Contact.filter({ workspaceId: activeWorkspace.id }),
-        base44.entities.Account.filter({ workspaceId: activeWorkspace.id })
+        base44.entities.Contact.filter(contactFilter),
+        base44.entities.Account.filter(accountFilter)
       ]);
       setContacts(contactsData.sort((a, b) => a.name.localeCompare(b.name)));
       setAccounts(accountsData);
