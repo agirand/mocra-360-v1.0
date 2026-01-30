@@ -11,6 +11,8 @@ export function WorkspaceProvider({ children }) {
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
+  const [activeAccountId, setActiveAccountId] = useState(null);
+  const [accountAssignments, setAccountAssignments] = useState([]);
 
   const loadUserContext = useCallback(async () => {
     try {
@@ -72,6 +74,22 @@ export function WorkspaceProvider({ children }) {
           setActiveWorkspace(defaultWorkspace);
           const membership = activeMemberships.find(m => m.workspaceId === defaultWorkspace.id);
           setUserRole(membership?.role || null);
+
+          // Load account assignments for client users
+          if (membership?.role === 'client_admin' || membership?.role === 'client_user') {
+            const assignments = await base44.entities.AccountUserAssignment.filter({
+              userId: currentUser.id,
+              workspaceId: defaultWorkspace.id,
+              status: 'active'
+            });
+            setAccountAssignments(assignments);
+
+            // Set active account from localStorage or first assignment
+            const savedAccountId = localStorage.getItem(`activeAccountId_${defaultWorkspace.id}`);
+            const savedAssignment = assignments.find(a => a.accountId === savedAccountId);
+            const defaultAccountId = savedAssignment?.accountId || assignments[0]?.accountId;
+            setActiveAccountId(defaultAccountId);
+          }
         }
       }
     } catch (error) {
@@ -85,12 +103,30 @@ export function WorkspaceProvider({ children }) {
     loadUserContext();
   }, [loadUserContext]);
 
-  const switchWorkspace = useCallback((workspace) => {
+  const switchWorkspace = useCallback(async (workspace) => {
     setActiveWorkspace(workspace);
     localStorage.setItem('activeWorkspaceId', workspace.id);
     const membership = memberships.find(m => m.workspaceId === workspace.id);
     setUserRole(membership?.role || null);
-  }, [memberships]);
+
+    // Load account assignments for client users
+    if (membership?.role === 'client_admin' || membership?.role === 'client_user') {
+      const assignments = await base44.entities.AccountUserAssignment.filter({
+        userId: user.id,
+        workspaceId: workspace.id,
+        status: 'active'
+      });
+      setAccountAssignments(assignments);
+
+      const savedAccountId = localStorage.getItem(`activeAccountId_${workspace.id}`);
+      const savedAssignment = assignments.find(a => a.accountId === savedAccountId);
+      const defaultAccountId = savedAssignment?.accountId || assignments[0]?.accountId;
+      setActiveAccountId(defaultAccountId);
+    } else {
+      setActiveAccountId(null);
+      setAccountAssignments([]);
+    }
+  }, [memberships, user]);
 
   const refreshMemberships = useCallback(async () => {
     if (!user) return;
@@ -108,6 +144,19 @@ export function WorkspaceProvider({ children }) {
   const canEdit = userRole === 'platform_admin' || userRole === 'workspace_admin' || userRole === 'workspace_user';
   const canAdmin = userRole === 'platform_admin' || userRole === 'workspace_admin';
   const isLimitedUser = userRole === 'limited_user';
+  const isClientUser = userRole === 'client_admin' || userRole === 'client_user';
+  const isClientAdmin = userRole === 'client_admin';
+
+  const switchAccount = useCallback((accountId) => {
+    // Verify user has access to this account
+    const hasAccess = accountAssignments.some(a => a.accountId === accountId);
+    if (!hasAccess && isClientUser) {
+      console.error('Access denied to account');
+      return;
+    }
+    setActiveAccountId(accountId);
+    localStorage.setItem(`activeAccountId_${activeWorkspace.id}`, accountId);
+  }, [accountAssignments, isClientUser, activeWorkspace]);
 
   const value = {
     user,
@@ -120,7 +169,12 @@ export function WorkspaceProvider({ children }) {
     canEdit,
     canAdmin,
     isLimitedUser,
+    isClientUser,
+    isClientAdmin,
+    activeAccountId,
+    accountAssignments,
     switchWorkspace,
+    switchAccount,
     refreshMemberships,
     loadUserContext
   };

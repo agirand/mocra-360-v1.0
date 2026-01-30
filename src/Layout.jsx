@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 
 function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
-  const { user, isPlatformAdmin, activeWorkspace, loading, workspaces } = useWorkspace();
+  const { user, isPlatformAdmin, activeWorkspace, loading, workspaces, isClientUser } = useWorkspace();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Scroll to top on route change
@@ -36,7 +36,7 @@ function LayoutContent({ children, currentPageName }) {
     base44.auth.logout();
   };
 
-  // CRM Navigation items
+  // CRM Navigation items (for consultants)
   const crmNavItems = [
     { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
     { name: 'Accounts', page: 'Accounts', icon: Building2 },
@@ -44,6 +44,13 @@ function LayoutContent({ children, currentPageName }) {
     { name: 'Facilities', page: 'Facilities', icon: Factory },
     { name: 'Brands', page: 'Brands', icon: Tag },
     { name: 'Projects', page: 'Projects', icon: FolderKanban },
+  ];
+
+  // Client Portal Navigation items
+  const clientNavItems = [
+    { name: 'Dashboard', page: 'ClientDashboard', icon: LayoutDashboard },
+    { name: 'My Company', page: 'ClientAccountView', icon: Building2 },
+    { name: 'Projects', page: 'ClientProjects', icon: FolderKanban },
   ];
 
   // Platform Admin items
@@ -120,7 +127,7 @@ function LayoutContent({ children, currentPageName }) {
           <WorkspaceSwitcher />
         </div>
         <nav className="p-4 space-y-1">
-          {activeWorkspace && (
+          {activeWorkspace && !isClientUser && (
             <>
               <p className="text-xs font-medium text-slate-400 uppercase tracking-wider px-3 mb-2">
                 CRM
@@ -136,6 +143,33 @@ function LayoutContent({ children, currentPageName }) {
                       "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                       isActive 
                         ? "bg-slate-100 text-slate-900" 
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    )}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.name}
+                  </Link>
+                );
+              })}
+            </>
+          )}
+
+          {activeWorkspace && isClientUser && (
+            <>
+              <p className="text-xs font-medium text-slate-400 uppercase tracking-wider px-3 mb-2">
+                Client Portal
+              </p>
+              {clientNavItems.map((item) => {
+                const isActive = currentPageName === item.page;
+                return (
+                  <Link
+                    key={item.page}
+                    to={createPageUrl(item.page)}
+                    onClick={() => setSidebarOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                      isActive 
+                        ? "bg-blue-100 text-blue-900" 
                         : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                     )}
                   >
@@ -176,21 +210,23 @@ function LayoutContent({ children, currentPageName }) {
             </>
           )}
 
-          <div className="pt-4">
-            <Link
-              to={createPageUrl('WorkspaceSettings')}
-              onClick={() => setSidebarOpen(false)}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                currentPageName === 'WorkspaceSettings'
-                  ? "bg-slate-100 text-slate-900" 
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-              )}
-            >
-              <Settings className="h-4 w-4" />
-              Workspace Settings
-            </Link>
-          </div>
+          {!isClientUser && (
+            <div className="pt-4">
+              <Link
+                to={createPageUrl('WorkspaceSettings')}
+                onClick={() => setSidebarOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  currentPageName === 'WorkspaceSettings'
+                    ? "bg-slate-100 text-slate-900" 
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                )}
+              >
+                <Settings className="h-4 w-4" />
+                Workspace Settings
+              </Link>
+            </div>
+          )}
         </nav>
       </aside>
 
