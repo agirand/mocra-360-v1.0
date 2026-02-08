@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import { useWorkspace } from '@/components/workspace/WorkspaceContext';
-import { useDataHelper } from '@/components/lib/dataHelper';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,7 +14,6 @@ import { Wrench, Search, AlertCircle, Calendar } from 'lucide-react';
 
 export default function Equipment() {
   const { activeWorkspace, activeAccountId, isClientUser, canEdit } = useWorkspace();
-  const dataHelper = useDataHelper(activeWorkspace, activeAccountId, isClientUser);
   
   const [equipment, setEquipment] = useState([]);
   const [facilities, setFacilities] = useState([]);
@@ -24,17 +23,28 @@ export default function Equipment() {
   const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
-    if (dataHelper) {
+    if (activeWorkspace) {
       loadData();
     }
-  }, [dataHelper]);
+  }, [activeWorkspace, activeAccountId]);
 
   const loadData = async () => {
+    if (!activeWorkspace) return;
+    
     setLoading(true);
     try {
+      // Build filters with workspace and account isolation
+      const equipmentFilter = { workspaceId: activeWorkspace.id };
+      const facilityFilter = { workspaceId: activeWorkspace.id };
+      
+      if (isClientUser && activeAccountId) {
+        equipmentFilter.accountId = activeAccountId;
+        facilityFilter.accountId = activeAccountId;
+      }
+
       const [equipmentData, facilitiesData] = await Promise.all([
-        dataHelper.list('Equipment'),
-        dataHelper.list('Facility')
+        base44.entities.Equipment.filter(equipmentFilter),
+        base44.entities.Facility.filter(facilityFilter)
       ]);
       
       // Check for overdue maintenance
