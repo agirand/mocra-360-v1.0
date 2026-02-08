@@ -50,6 +50,9 @@
 import AccountDetail from './pages/AccountDetail';
 import Accounts from './pages/Accounts';
 import Brands from './pages/Brands';
+import ClientAccountView from './pages/ClientAccountView';
+import ClientDashboard from './pages/ClientDashboard';
+import ClientProjects from './pages/ClientProjects';
 import Contacts from './pages/Contacts';
 import ControlCenter from './pages/ControlCenter';
 import CreateWorkspace from './pages/CreateWorkspace';
@@ -60,9 +63,7 @@ import Opportunities from './pages/Opportunities';
 import Projects from './pages/Projects';
 import SaaSDashboard from './pages/SaaSDashboard';
 import WorkspaceSettings from './pages/WorkspaceSettings';
-import ClientDashboard from './pages/ClientDashboard';
-import ClientAccountView from './pages/ClientAccountView';
-import ClientProjects from './pages/ClientProjects';
+import Equipment from './pages/Equipment';
 import __Layout from './Layout.jsx';
 
 
@@ -70,6 +71,9 @@ export const PAGES = {
     "AccountDetail": AccountDetail,
     "Accounts": Accounts,
     "Brands": Brands,
+    "ClientAccountView": ClientAccountView,
+    "ClientDashboard": ClientDashboard,
+    "ClientProjects": ClientProjects,
     "Contacts": Contacts,
     "ControlCenter": ControlCenter,
     "CreateWorkspace": CreateWorkspace,
@@ -80,9 +84,7 @@ export const PAGES = {
     "Projects": Projects,
     "SaaSDashboard": SaaSDashboard,
     "WorkspaceSettings": WorkspaceSettings,
-    "ClientDashboard": ClientDashboard,
-    "ClientAccountView": ClientAccountView,
-    "ClientProjects": ClientProjects,
+    "Equipment": Equipment,
 }
 
 export const pagesConfig = {

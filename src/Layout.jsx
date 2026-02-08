@@ -16,7 +16,8 @@ import {
   Shield,
   TrendingUp,
   Menu,
-  X
+  X,
+  Wrench
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useState } from 'react';
@@ -42,6 +43,7 @@ function LayoutContent({ children, currentPageName }) {
     { name: 'Accounts', page: 'Accounts', icon: Building2 },
     { name: 'Contacts', page: 'Contacts', icon: Users },
     { name: 'Facilities', page: 'Facilities', icon: Factory },
+    { name: 'Equipment', page: 'Equipment', icon: Wrench },
     { name: 'Brands', page: 'Brands', icon: Tag },
     { name: 'Projects', page: 'Projects', icon: FolderKanban },
   ];
