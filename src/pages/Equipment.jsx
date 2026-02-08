@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useWorkspace } from '@/components/workspace/WorkspaceContext';
-import { useDataHelper } from '@/lib/dataHelper';
+import { useDataHelper } from '@/components/lib/dataHelper';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
